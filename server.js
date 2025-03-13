@@ -6,7 +6,7 @@ import userRouter from './routes/userRoutes.js';
 import imageRouter from './routes/imagesRoutes.js';
 import Stripe from 'stripe';
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 10000;
 const app = express();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
