@@ -1,42 +1,41 @@
 import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
+
 const app = express();
 
+// CORS configuration
 app.use(cors({
-    origin: ["http://localhost:5173", "https://promptopia0105.vercel.app/"],
-    methods : ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders : ['Content-Type', 'Authorization'],
-    credentials: true
+    origin: ["http://localhost:5173", "https://promptopia0105.vercel.app"],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
 }));
 
 app.use(express.json());
 
-app.use((req, res, next)=> {
-    res.header("Access_Control-Allow-Origin", "https://promptopia0105.vercel.app/");
-    res.header("Access_Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    res.header("Access_Control-Allow-Headers", "Content-Type, Authorization");
-    res.header("Access_Control-Allow-Credentials", "true");
+// CORS middleware for preflight request handling
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "https://promptopia0105.vercel.app");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    res.header("Access-Control-Allow-Credentials", "true");
 
-    if (req.method==="OPTIONS"){
+    // If the request is OPTIONS (preflight request), send 204 status code
+    if (req.method === "OPTIONS") {
         return res.sendStatus(204);
     }
+
     next();
 });
-    
-               
+
 import connectDB from './config/mongodb.js';
 import userRouter from './routes/userRoutes.js';
 import imageRouter from './routes/imagesRoutes.js';
 import Stripe from 'stripe';
 
 const PORT = process.env.PORT || 10000;
-
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
-
-
-
 
 app.post('/api/create-payment-intent', async (req, res) => {
     try {
