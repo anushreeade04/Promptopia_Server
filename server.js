@@ -1,21 +1,26 @@
 import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
+const app = express();
+
+app.use(cors({
+    origin: ["http://localhost:5173", "https://promptopia0105.vercel.app/"],
+    methods : ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+}));
+
+app.use(express.json());
 import connectDB from './config/mongodb.js';
 import userRouter from './routes/userRoutes.js';
 import imageRouter from './routes/imagesRoutes.js';
 import Stripe from 'stripe';
 
 const PORT = process.env.PORT || 10000;
-const app = express();
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-app.use(express.json());
-app.use(cors({
-    origin: ["http://localhost:5173", "https://promptopia0105.vercel.app/"],
-    methods : ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true
-}));
+
+
 
 
 app.post('/api/create-payment-intent', async (req, res) => {
